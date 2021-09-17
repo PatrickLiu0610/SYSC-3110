@@ -5,8 +5,10 @@ import java.util.ArrayList;
 
 public class AddressBook {
 
+    //ArrayList for storing BuddyInfo objects
     private ArrayList<BuddyInfo> buddyList = new ArrayList<>();
 
+    //addBuddy is used for adding BuddyInfo objects into the ArrayList
     public void addBuddy(BuddyInfo buddy){
 
         boolean added = false;
@@ -29,6 +31,7 @@ public class AddressBook {
         }
     }
 
+    //removeBuddy is used for adding BuddyInfo objects into the ArrayList
     public void removeBuddy(BuddyInfo buddy){
         buddyList.removeIf(num -> num.equals(buddy));
     }
