@@ -63,5 +63,7 @@ public class AddressBook {
         for (BuddyInfo num : addressBook.buddyList) {
             System.out.println("\nAfter removing buddy1:\n" + num.getName() + " " + num.getAddress() + " " + num.getPhoneNumber());
         }
+
+        //small changes
     }
 }
