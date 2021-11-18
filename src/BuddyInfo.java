@@ -30,4 +30,14 @@ public class BuddyInfo {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    @Override
+    public String toString() {
+        return name + "#" + address + "#" + phoneNumber;
+    }
+
+    public static BuddyInfo importString(String text){
+        String[] parts = text.split("#");
+        return new BuddyInfo(parts[0], parts[1], parts[2]);
+    }
 }
