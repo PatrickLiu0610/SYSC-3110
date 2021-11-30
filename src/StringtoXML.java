@@ -1,13 +1,7 @@
-/* Yuguo Liu */
-/* 101142730 */
-
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -15,91 +9,62 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Objects;
 
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import static org.junit.Assert.assertEquals;
 
-public class AddressBook implements Serializable{
 
-    //ArrayList for storing BuddyInfo objects
-    private ArrayList<BuddyInfo> buddyList = new ArrayList<>();
+public class StringtoXML {
+    private BuddyInfo buddyInfo1;
+    private BuddyInfo buddyInfo2;
+    private BuddyInfo buddyInfo3;
+    private AddressBook addressBook;
 
-    public ArrayList<BuddyInfo> getBuddyList(){
-        return buddyList;
+    public StringtoXML(){
+        buddyInfo1 = new BuddyInfo("patrick", "red", "613");
+        buddyInfo2 = new BuddyInfo("John", "green", "316");
+        buddyInfo3 = new BuddyInfo("peter", "blue", "163");
+        addressBook = new AddressBook();
+        addressBook.addBuddy(buddyInfo1);
+        addressBook.addBuddy(buddyInfo2);
+        addressBook.addBuddy(buddyInfo3);
     }
 
-    //addBuddy is used for adding BuddyInfo objects into the ArrayList
-    public void addBuddy(BuddyInfo buddy){
-
-        boolean added = false;
-
-        if(buddyList.isEmpty()){
-            buddyList.add(buddy);
-        }
-        else{
-            // avoid duplicate buddyInfo objects
-            for (BuddyInfo num : buddyList) {
-                if(num.equals(buddy)){
-                    added = true;
-                    break;
-                }
-            }
-
-            if(!added){
-                buddyList.add(buddy);
-            }
-        }
+    public AddressBook getAddressBook() {
+        return addressBook;
     }
 
-    //removeBuddy is used for adding BuddyInfo objects into the ArrayList
-    public void removeBuddy(String name){
-        buddyList.removeIf(num -> num.getName().equals(name));
+    public static void main(String[] args) throws IOException, TransformerException {
+
+        StringtoXML s = new StringtoXML();
+        output(s.getAddressBook());
+
+        s.testoutput();
     }
 
-    public void clear(){
-        buddyList.clear();
+    @Test
+    private void testoutput(){
+        AddressBook book2 = input();
+
+        assertEquals(book2.getBuddyList().get(0).getName(), buddyInfo1.getName());
+        assertEquals(book2.getBuddyList().get(1).getName(), buddyInfo2.getName());
+        assertEquals(book2.getBuddyList().get(2).getName(), buddyInfo3.getName());
     }
 
-    @Override
-    public String toString(){
-        String eol = System.getProperty("line.separator");
-        String s = "<AddressBook>" + eol;
-        for (BuddyInfo b: buddyList){
-            s += b.toString();
-        }
-        return s + eol + "</AddressBook>";
-    }
-
-    public void output(String name)throws IOException {
-        FileOutputStream fileOutputStream
-                = new FileOutputStream(name);
-        ObjectOutputStream objectOutputStream
-                = new ObjectOutputStream(fileOutputStream);
-        objectOutputStream.writeObject(this);
-        objectOutputStream.flush();
-        objectOutputStream.close();
-    }
-
-    public static AddressBook input(String name)throws IOException, ClassNotFoundException{
-        FileInputStream fileInputStream
-                = new FileInputStream(name);
-        ObjectInputStream objectInputStream
-                = new ObjectInputStream(fileInputStream);
-        AddressBook book = (AddressBook) objectInputStream.readObject();
-        objectInputStream.close();
-        return book;
-    }
-
-    public void outputXML(String filename) throws IOException, TransformerException{
-        final String xmlStr = this.toString();
+    private static void output(AddressBook addressBook) throws IOException, TransformerException{
+        final String xmlStr = addressBook.toString();
 
         Document doc = convertStringToXMLDocument( xmlStr );
 
+        String a = "output.txt";
+        File myObj = new File(a);
         DOMSource source = new DOMSource(doc);
-        FileWriter writer = new FileWriter(filename);
+        FileWriter writer = new FileWriter(myObj);
         StreamResult result = new StreamResult(writer);
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -130,11 +95,12 @@ public class AddressBook implements Serializable{
         return null;
     }
 
-    public static AddressBook inputXML(String xmlFilename){
+    private static AddressBook input(){
         AddressBook addressBook = new AddressBook();
         try
         {
-            File file = new File(xmlFilename);
+            String a = "output.txt";
+            File file = new File(a);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(file);

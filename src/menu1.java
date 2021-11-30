@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
-public class menu1{
+import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+public class menu1 {
     private AddressBook book = new AddressBook();
     private JLabel l = new JLabel();
 
@@ -26,6 +29,7 @@ public class menu1{
         JMenu c = new JMenu("New Book");
         JMenu d = new JMenu("Save");
         JMenu e = new JMenu("Import");
+        JMenu g = new JMenu("XMLsave");
 
         // create menuItems
         JMenuItem m1 = new JMenuItem(new AbstractAction("Display") {
@@ -128,6 +132,13 @@ public class menu1{
                     System.out.println("An error occurred.");
                     ae.printStackTrace();
                 }
+            }
+        });
+
+        JMenuItem m7 = new JMenuItem(new AbstractAction("XMLsave") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
 
